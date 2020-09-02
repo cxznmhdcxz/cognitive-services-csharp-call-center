@@ -42,7 +42,7 @@ namespace CallCenterSample
                 SettingsHelper.Instance.SettingsChanged += (target, args) =>
                 {
                     TextAnalyticsHelper.ApiKey = SettingsHelper.Instance.TextAnalyticsApiKey;
-                    TextAnalyticsHelper.ApiKeyRegion = SettingsHelper.Instance.TextAnalyticsApiKeyRegion;
+                    TextAnalyticsHelper.EndPoint = SettingsHelper.Instance.TextAnalyticsEndpoint;
                     TranslatorTextHelper.ApiKey = SettingsHelper.Instance.TranslatorTextApiKey;
                 };
 

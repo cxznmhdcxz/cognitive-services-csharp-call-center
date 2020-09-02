@@ -34,6 +34,7 @@
 using Microsoft.Azure.CognitiveServices.Language.TextAnalytics;
 using Microsoft.Azure.CognitiveServices.Language.TextAnalytics.Models;
 using Microsoft.Rest;
+using Azure.AI.TextAnalytics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,12 +42,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using Azure;
 
 namespace CallCenterSample.Helpers
 {
     public class TextAnalyticsHelper
     {
-        private static ITextAnalyticsClient AnalyticsClient { get; set; }
+        //private static ITextAnalyticsClient AnalyticsClient { get; set; }
+        private static Azure.AI.TextAnalytics.TextAnalyticsClient AnalyticsClient { get; set; }
 
         private static string apiKey;
 
@@ -79,14 +82,39 @@ namespace CallCenterSample.Helpers
             }
         }
 
+        private static string endPoint;
+        public static string EndPoint
+        {
+            get { return endPoint; }
+            set
+            {
+                var changed = endPoint != value;
+                endPoint = value;
+                if (changed)
+                {
+                    InitializeTextAnalyticsClient();
+                }
+            }
+        }
+
+        //private static void InitializeTextAnalyticsClient()
+        //{
+        //    if (!string.IsNullOrEmpty(ApiKey) && !string.IsNullOrEmpty(ApiKeyRegion))
+        //    {
+        //        AnalyticsClient = new Microsoft.Azure.CognitiveServices.Language.TextAnalytics.TextAnalyticsClient(new ApiKeyServiceClientCredentials())
+        //        {
+        //            Endpoint = string.Format("https://{0}.api.cognitive.microsoft.com", ApiKeyRegion)
+        //        };
+        //    }
+        //}
+
         private static void InitializeTextAnalyticsClient()
         {
-            if (!string.IsNullOrEmpty(ApiKey) && !string.IsNullOrEmpty(ApiKeyRegion))
+            if (!string.IsNullOrEmpty(ApiKey) && !string.IsNullOrEmpty(EndPoint) && !EndPoint.Contains("west") &&!EndPoint.Contains("asia"))
             {
-                AnalyticsClient = new TextAnalyticsClient(new ApiKeyServiceClientCredentials())
-                {
-                    Endpoint = string.Format("https://{0}.api.cognitive.microsoft.com", ApiKeyRegion)
-                };
+                AnalyticsClient = new Azure.AI.TextAnalytics.TextAnalyticsClient(
+                    new Uri(EndPoint),
+                    new AzureKeyCredential(ApiKey));
             }
         }
 
@@ -109,53 +137,100 @@ namespace CallCenterSample.Helpers
 
             if (!string.IsNullOrEmpty(input))
             {
-                LanguageBatchResult result = await AnalyticsClient.DetectLanguageAsync(new BatchInput(
-                    new List<Input>()
-                    {
-                        new Input("0", input)
-                    }));
+                DetectLanguageResultCollection result = await AnalyticsClient.DetectLanguageBatchAsync(
+                new List<string>() { input });
 
-                if (result.Documents != null)
+                if (!result[0].HasError)
                 {
-                    languageResult.Language.Add("iso6391Name", result.Documents[0].DetectedLanguages[0].Iso6391Name);
-                    languageResult.Language.Add("name", result.Documents[0].DetectedLanguages[0].Name);
-                    languageResult.Language.Add("score", result.Documents[0].DetectedLanguages[0].Score.ToString());
-                }
-
-                if (result.Errors != null)
-                {
-                    // Just return the empty Dictionary
-                }
+                    languageResult.Language.Add("iso6391Name", result[0].PrimaryLanguage.Iso6391Name);
+                    languageResult.Language.Add("name", result[0].PrimaryLanguage.Name);
+                    languageResult.Language.Add("score", result[0].PrimaryLanguage.ConfidenceScore.ToString());
+                }   
             }
 
             return languageResult;
         }
 
+        //public static async Task<DetectLanguageResult> GetDetectedLanguageAsync(string input)
+        //{
+        //    DetectLanguageResult languageResult = new DetectLanguageResult() { Language = new Dictionary<string, string>() };
+
+        //    if (!string.IsNullOrEmpty(input))
+        //    {
+        //        LanguageBatchResult result = await AnalyticsClient.DetectLanguageAsync(new BatchInput(
+        //            new List<Input>()
+        //            {
+        //                new Input("0", input)
+        //            }));
+
+        //        if (result.Documents != null)
+        //        {
+        //            languageResult.Language.Add("iso6391Name", result.Documents[0].DetectedLanguages[0].Iso6391Name);
+        //            languageResult.Language.Add("name", result.Documents[0].DetectedLanguages[0].Name);
+        //            languageResult.Language.Add("score", result.Documents[0].DetectedLanguages[0].Score.ToString());
+        //        }
+
+        //        if (result.Errors != null)
+        //        {
+        //            // Just return the empty Dictionary
+        //        }
+        //    }
+
+        //    return languageResult;
+        //}
+
         public static async Task<SentimentResult> GetTextSentimentAsync(string input, string language = "en")
         {
-            SentimentResult sentimentResult = new SentimentResult() { Score = 0.5 };
+            SentimentResult sentimentResult = new SentimentResult()
+            {
+                Sentiment = "null",
+                Negative = 0.5,
+                Neutral = 0.5,
+                Positive = 0.5
+            };
 
             if (!string.IsNullOrEmpty(input))
             {
-                SentimentBatchResult result = await AnalyticsClient.SentimentAsync(new MultiLanguageBatchInput(
-                    new List<MultiLanguageInput>()
-                    {
-                        new MultiLanguageInput(language, "0", input)
-                    }));
+                AnalyzeSentimentResultCollection result = await AnalyticsClient.AnalyzeSentimentBatchAsync(
+                    new List<string>() { input }, language);
 
-                if (result.Documents != null)
+                if (!result[0].HasError)
                 {
-                    sentimentResult.Score = (double) result.Documents[0].Score;
-                }
-
-                if (result.Errors != null)
-                {
-                    // Just return the neutral value
+                    sentimentResult.Sentiment = result[0].DocumentSentiment.Sentiment.ToString();
+                    sentimentResult.Negative = (double)result[0].DocumentSentiment.ConfidenceScores.Negative;
+                    sentimentResult.Neutral = (double)result[0].DocumentSentiment.ConfidenceScores.Neutral;
+                    sentimentResult.Positive = (double)result[0].DocumentSentiment.ConfidenceScores.Positive;
                 }
             }
 
             return sentimentResult;
         }
+
+        //public static async Task<SentimentResult> GetTextSentimentAsync(string input, string language = "en")
+        //{
+        //    SentimentResult sentimentResult = new SentimentResult() { Negative = 0, Positive = 0, Neutral = 0 };
+
+        //    if (!string.IsNullOrEmpty(input))
+        //    {
+        //        SentimentBatchResult result = await AnalyticsClient.SentimentAsync(new MultiLanguageBatchInput(
+        //            new List<MultiLanguageInput>()
+        //            {
+        //                new MultiLanguageInput(language, "0", input)
+        //            }));
+
+        //        if (result.Documents != null)
+        //        {
+        //            sentimentResult.Score = (double) result.Documents[0].Score;
+        //        }
+
+        //        if (result.Errors != null)
+        //        {
+        //            // Just return the neutral value
+        //        }
+        //    }
+
+        //    return sentimentResult;
+        //}
 
         public static async Task<KeyPhrasesResult> GetKeyPhrasesAsync(string input, string language = "en")
         {
@@ -163,37 +238,64 @@ namespace CallCenterSample.Helpers
 
             if (!string.IsNullOrEmpty(input))
             {
-                KeyPhraseBatchResult result = await AnalyticsClient.KeyPhrasesAsync(new MultiLanguageBatchInput(
-                    new List<MultiLanguageInput>()
-                    {
-                        new MultiLanguageInput(language, "0", input)
-                    }));
+                ExtractKeyPhrasesResultCollection result = await AnalyticsClient.ExtractKeyPhrasesBatchAsync(
+                    new List<string>() { input }, language);
 
-                if (result.Documents != null)
+                if (!result[0].HasError)
                 {
                     List<string> phrases = new List<string>();
-
-                    foreach (string keyPhrase in result.Documents[0].KeyPhrases)
+                    foreach (string keyPhrase in result[0].KeyPhrases)
                     {
                         phrases.Add(keyPhrase);
                     }
 
                     keyPhrasesResult.KeyPhrases = phrases;
                 }
-
-                if (result.Errors != null)
-                {
-                    // Just return the empty IEnumerable
-                }
             }
 
             return keyPhrasesResult;
         }
+
+        //public static async Task<KeyPhrasesResult> GetKeyPhrasesAsync(string input, string language = "en")
+        //{
+        //    KeyPhrasesResult keyPhrasesResult = new KeyPhrasesResult() { KeyPhrases = Enumerable.Empty<string>() };
+
+        //    if (!string.IsNullOrEmpty(input))
+        //    {
+        //        KeyPhraseBatchResult result = await AnalyticsClient.KeyPhrasesAsync(new MultiLanguageBatchInput(
+        //            new List<MultiLanguageInput>()
+        //            {
+        //                new MultiLanguageInput(language, "0", input)
+        //            }));
+
+        //        if (result.Documents != null)
+        //        {
+        //            List<string> phrases = new List<string>();
+
+        //            foreach (string keyPhrase in result.Documents[0].KeyPhrases)
+        //            {
+        //                phrases.Add(keyPhrase);
+        //            }
+
+        //            keyPhrasesResult.KeyPhrases = phrases;
+        //        }
+
+        //        if (result.Errors != null)
+        //        {
+        //            // Just return the empty IEnumerable
+        //        }
+        //    }
+
+        //    return keyPhrasesResult;
+        //}
     }
 
     public class SentimentResult
     {
-        public double Score { get; set; }
+        public string Sentiment { get; set; }
+        public double Negative { get; set; }
+        public double Neutral { get; set; }
+        public double Positive { get; set; }
     }
 
     public class DetectLanguageResult

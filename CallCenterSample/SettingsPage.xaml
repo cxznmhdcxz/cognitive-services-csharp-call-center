@@ -20,23 +20,16 @@
         <ScrollViewer Grid.Row="1">
 
             <StackPanel Orientation="Vertical" Margin="12,12" >
-                <StackPanel >
+                <StackPanel HorizontalAlignment="Stretch" Height="364" Margin="0,0,0,0" VerticalAlignment="Stretch" >
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Keys" Style="{StaticResource SubheaderTextBlockStyle}"/>
                     </StackPanel>
 
-                    <Grid Margin="0,10,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-                        <PasswordBox Header="Text Analytics Key" Password="{Binding TextAnalyticsApiKey, Mode=TwoWay}" />
-                        <ComboBox Grid.Column="1" Margin="10,0,6,0" Header="Region" ItemsSource="{Binding AvailableApiRegions}" SelectedItem="{Binding TextAnalyticsApiKeyRegion, Mode=TwoWay}"/>
-                    </Grid>
+                    <PasswordBox Header="Text Analytics Key" Password="{Binding TextAnalyticsApiKey, Mode=TwoWay}" Margin="0,10,0,0" />
+                    <TextBox Header="Text Analytics Endpoint" Text="{Binding TextAnalyticsEndpoint, Mode=TwoWay}" Margin="0,10,0,0" />
 
                     <PasswordBox Header="Translator Text API Key" Password="{Binding TranslatorTextApiKey, Mode=TwoWay}" Margin="0,10,0,0" />
-
-                    <HyperlinkButton Content="Back" Click="OnBackClick" />
+                    <HyperlinkButton Content="Back" Click="OnBackClick" RenderTransformOrigin="0.726,3.094" HorizontalAlignment="Left" VerticalAlignment="Center" />
 
                 </StackPanel>
 

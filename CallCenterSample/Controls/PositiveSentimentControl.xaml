@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="CallCenterSample.Controls.NegativeSentimentControl"
+    x:Class="CallCenterSample.Controls.PositiveSentimentControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -10,8 +10,8 @@
     d:DesignHeight="40" d:DesignWidth="300">
     
     <Grid >
-        <TextBlock Text="Negative Score" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,25,0,0" ></TextBlock>
-        <TextBlock FontSize="28" FontFamily="Wingdings" HorizontalAlignment="Right" VerticalAlignment="Center">L</TextBlock>
+        <TextBlock Text="Positive Score" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,25,0,0" ></TextBlock>
+        <TextBlock FontSize="28" FontFamily="Wingdings" HorizontalAlignment="Right" VerticalAlignment="Center">J</TextBlock>
 
         <Grid Margin="40,5,40,0" Height="10" x:Name="GuideLine">
             <Grid.ColumnDefinitions>

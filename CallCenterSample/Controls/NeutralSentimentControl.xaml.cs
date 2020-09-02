@@ -9,13 +9,13 @@ namespace CallCenterSample.Controls
     /// <summary>
     /// Interaction logic for SentimentControl.xaml
     /// </summary>
-    public partial class NegativeSentimentControl : UserControl
+    public partial class NeutralSentimentControl : UserControl
     {
         public static readonly DependencyProperty SentimentProperty =
             DependencyProperty.Register(
             "Sentiment",
             typeof(double),
-            typeof(NegativeSentimentControl),
+            typeof(NeutralSentimentControl),
             new PropertyMetadata(0.5, SentimentPropertyChangedCallback)
             );
 
@@ -27,11 +27,11 @@ namespace CallCenterSample.Controls
 
         static void SentimentPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            NegativeSentimentControl control = (NegativeSentimentControl)d;
+            NeutralSentimentControl control = (NeutralSentimentControl)d;
             control.UpdateSentimentPointer();
         }
 
-        public NegativeSentimentControl()
+        public NeutralSentimentControl()
         {
             InitializeComponent();
         }

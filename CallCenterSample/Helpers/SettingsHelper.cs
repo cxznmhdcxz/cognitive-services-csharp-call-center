@@ -114,6 +114,12 @@ namespace CallCenterSample.Helpers
                 this.TranslatorTextApiKey = value.ToString();
             }
 
+            value = ApplicationData.Current.RoamingSettings.Values["TextAnalyticsEndpoint"];
+            if (value != null)
+            {
+                this.TextAnalyticsEndpoint = value.ToString();
+            }
+
             value = ApplicationData.Current.RoamingSettings.Values["ShowDebugInfo"];
             if (value != null)
             {
@@ -149,6 +155,17 @@ namespace CallCenterSample.Helpers
             {
                 this.textAnalyticsApiKeyRegion = value;
                 this.OnSettingChanged("TextAnalyticsApiKeyRegion", value);
+            }
+        }
+
+        private string textAnalyticsEndpoint = "https://myendpoint.cognitiveservices.azure.com/";
+        public string TextAnalyticsEndpoint
+        {
+            get { return textAnalyticsEndpoint; }
+            set
+            {
+                this.textAnalyticsEndpoint = value;
+                this.OnSettingChanged("TextAnalyticsEndpoint", value);
             }
         }
 

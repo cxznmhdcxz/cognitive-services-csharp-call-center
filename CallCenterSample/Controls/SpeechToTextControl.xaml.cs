@@ -284,11 +284,15 @@ namespace CallCenterSample.Controls
                 if (!string.IsNullOrEmpty(this.speechRecognitionTextBox.Text))
                 {
                     SentimentResult textAnalysisResult = await TextAnalyticsHelper.GetTextSentimentAsync(this.translatedText, this.detectedLanguage[0]);
-                    this.sentimentControl.Sentiment = textAnalysisResult.Score;
+                    this.sentimentControl.Sentiment = textAnalysisResult.Negative;
+                    this.neutralSentimentControl.Sentiment = textAnalysisResult.Neutral;
+                    this.positiveSentimentControl.Sentiment = textAnalysisResult.Positive;
                 }
                 else
                 {
                     this.sentimentControl.Sentiment = 0.5;
+                    this.neutralSentimentControl.Sentiment = 0.5;
+                    this.positiveSentimentControl.Sentiment = 0.5;
                 }
 
                 this.OnSpeechRecognitionAndSentimentProcessed(new SpeechRecognitionAndSentimentResult { SpeechRecognitionText = this.speechRecognitionTextBox.Text, TextAnalysisSentiment = this.sentimentControl.Sentiment, DetectedLanguage = this.detectedLanguage[1], TranslatedText = this.translatedText });
