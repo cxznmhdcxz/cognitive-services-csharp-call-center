@@ -21,9 +21,9 @@ This sample is a basic mock-up for a call center app that takes a customer's spo
 This project framework provides the following features:
 
 * Text translation: Translation of text is provided by Translator Text via JSON returned from a request sent to the [Translate](https://docs.microsoft.com/azure/cognitive-services/translator/reference/v3-0-translate) method
-* Language detection: Language detection of text is provided by Text Analytics via the [Microsoft.Azure.CognitiveServices.Language.TextAnalytics](https://www.nuget.org/packages/Microsoft.Azure.CognitiveServices.Language.TextAnalytics/) NuGet package
-* Emotion detection: Emotion underlying text is provided by Text Analytics via the [Microsoft.Azure.CognitiveServices.Language.TextAnalytics](https://www.nuget.org/packages/Microsoft.Azure.CognitiveServices.Language.TextAnalytics/) NuGet package
-* Key phrases: Parsing text for key phrases is provided by Text Analytics via the [Microsoft.Azure.CognitiveServices.Language.TextAnalytics](https://www.nuget.org/packages/Microsoft.Azure.CognitiveServices.Language.TextAnalytics/) NuGet package
+* Language detection: Language detection of text is provided by Text Analytics via the [Azure.AI.TextAnalytics](https://www.nuget.org/packages/Azure.AI.TextAnalytics/) NuGet package
+* Emotion detection: Emotion underlying text is provided by Text Analytics via the [Azure.AI.TextAnalytics](https://www.nuget.org/packages/Azure.AI.TextAnalytics/) NuGet package
+* Key phrases: Parsing text for key phrases is provided by Text Analytics via the [Azure.AI.TextAnalytics](https://www.nuget.org/packages/Azure.AI.TextAnalytics/) NuGet package
 * Speech-to-text: In the context of the scenario of this sample, where customers are telephoning a call center, the "speech to text" functionality could be handled via any number of methods. For the sake of convenience and simplicity, we are using the built-in voice input features of Windows 10 as a placeholder for those methods.
 
 ## Getting Started
@@ -51,7 +51,7 @@ Due to the use of Windows 10's voice input features, you'll also need to make a 
 To run the sample, follow these steps:
 
 1. Run the project from Visual Studio
-2. On the main page, click **Settings** so that you can enter your API keys and region info, and then click **Close**
+2. On the main page, click **Settings** so that you can enter your API keys and endpoint info, and then click **Close**
 3. On the main page, click the microphone button so that the app begins listening for speech; when you're done speaking, click the stop button so that the text representation of your speech can be tested for source language (and translated to English if necessary) and emotion, and parsed for key terms and phrases
 4. Click the reset button to begin the process again
 
