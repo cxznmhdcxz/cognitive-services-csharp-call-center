@@ -102,12 +102,6 @@ namespace CallCenterSample.Helpers
                 this.TextAnalyticsApiKey = value.ToString();
             }
 
-            value = ApplicationData.Current.RoamingSettings.Values["TextAnalyticsApiKeyRegion"];
-            if (value != null)
-            {
-                this.TextAnalyticsApiKeyRegion = value.ToString();
-            }
-
             value = ApplicationData.Current.RoamingSettings.Values["TranslatorTextApiKey"];
             if (value != null)
             {
@@ -147,17 +141,6 @@ namespace CallCenterSample.Helpers
             }
         }
 
-        private string textAnalyticsApiKeyRegion = "westus";
-        public string TextAnalyticsApiKeyRegion
-        {
-            get { return textAnalyticsApiKeyRegion; }
-            set
-            {
-                this.textAnalyticsApiKeyRegion = value;
-                this.OnSettingChanged("TextAnalyticsApiKeyRegion", value);
-            }
-        }
-
         private string textAnalyticsEndpoint = "https://myendpoint.cognitiveservices.azure.com/";
         public string TextAnalyticsEndpoint
         {
@@ -188,28 +171,6 @@ namespace CallCenterSample.Helpers
             {
                 this.showDebugInfo = value;
                 this.OnSettingChanged("ShowDebugInfo", value);
-            }
-        }
-
-        public string[] AvailableApiRegions
-        {
-            get
-            {
-                return new string[]
-                {
-                    "westus",
-                    "westus2",
-                    "eastus",
-                    "eastus2",
-                    "westcentralus",
-                    "southcentralus",
-                    "westeurope",
-                    "northeurope",
-                    "southeastasia",
-                    "eastasia",
-                    "australiaeast",
-                    "brazilsouth"
-                };
             }
         }
     }
