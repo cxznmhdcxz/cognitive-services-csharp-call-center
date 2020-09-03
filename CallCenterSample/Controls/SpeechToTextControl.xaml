@@ -18,7 +18,7 @@
                 <SymbolIcon x:Name="speechRecognitionControlButtonSymbol" Symbol="Stop"/>
             </Button>
         </StackPanel>
-        <local:NegativeSentimentControl x:Name="sentimentControl" Width="350" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,20,0,0"/>
+        <local:NegativeSentimentControl x:Name="negativeSentimentControl" Width="350" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,20,0,0"/>
         <local:NeutralSentimentControl x:Name="neutralSentimentControl" Width="350" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,20,0,0"/>
         <local:PositiveSentimentControl x:Name="positiveSentimentControl" Width="350" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,20,0,0"/>
     </StackPanel>

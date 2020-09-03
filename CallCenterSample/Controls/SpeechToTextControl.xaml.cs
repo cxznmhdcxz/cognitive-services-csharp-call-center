@@ -17,7 +17,9 @@ namespace CallCenterSample.Controls
     {
         public string DetectedLanguage { get; set; }
         public string SpeechRecognitionText { get; set; }
-        public double TextAnalysisSentiment { get; set; }
+        public double TextAnalysisNegativeSentiment { get; set; }
+        public double TextAnalysisNeutralSentiment { get; set; }
+        public double TextAnalysisPositiveSentiment { get; set; }
         public string TranslatedText { get; set; }
     }
 
@@ -181,7 +183,6 @@ namespace CallCenterSample.Controls
             this.speechRecognitionTextBox.Text = "";
             this.speechRecognitionTextBox.PlaceholderText = "Listening...";
             this.dictatedTextBuilder.Clear();
-            this.sentimentControl.Sentiment = 0.5;
 
             await this.speechRecognizer.ContinuousRecognitionSession.StartAsync();
         }
@@ -284,18 +285,18 @@ namespace CallCenterSample.Controls
                 if (!string.IsNullOrEmpty(this.speechRecognitionTextBox.Text))
                 {
                     SentimentResult textAnalysisResult = await TextAnalyticsHelper.GetTextSentimentAsync(this.translatedText, this.detectedLanguage[0]);
-                    this.sentimentControl.Sentiment = textAnalysisResult.Negative;
+                    this.negativeSentimentControl.Sentiment = textAnalysisResult.Negative;
                     this.neutralSentimentControl.Sentiment = textAnalysisResult.Neutral;
                     this.positiveSentimentControl.Sentiment = textAnalysisResult.Positive;
                 }
                 else
                 {
-                    this.sentimentControl.Sentiment = 0.5;
+                    this.negativeSentimentControl.Sentiment = 0.5;
                     this.neutralSentimentControl.Sentiment = 0.5;
                     this.positiveSentimentControl.Sentiment = 0.5;
                 }
 
-                this.OnSpeechRecognitionAndSentimentProcessed(new SpeechRecognitionAndSentimentResult { SpeechRecognitionText = this.speechRecognitionTextBox.Text, TextAnalysisSentiment = this.sentimentControl.Sentiment, DetectedLanguage = this.detectedLanguage[1], TranslatedText = this.translatedText });
+                this.OnSpeechRecognitionAndSentimentProcessed(new SpeechRecognitionAndSentimentResult { SpeechRecognitionText = this.speechRecognitionTextBox.Text, TextAnalysisNegativeSentiment = this.negativeSentimentControl.Sentiment, TextAnalysisNeutralSentiment = this.neutralSentimentControl.Sentiment, TextAnalysisPositiveSentiment = this.positiveSentimentControl.Sentiment, DetectedLanguage = this.detectedLanguage[1], TranslatedText = this.translatedText });
             }
             catch (Exception ex)
             {
