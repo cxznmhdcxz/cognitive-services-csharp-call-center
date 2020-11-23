@@ -22,7 +22,7 @@ This project framework provides the following features:
 
 * Text translation: Translation of text is provided by Translator Text via JSON returned from a request sent to the [Translate](https://docs.microsoft.com/azure/cognitive-services/translator/reference/v3-0-translate) method
 * Language detection: Language detection of text is provided by Text Analytics via the [Azure.AI.TextAnalytics](https://www.nuget.org/packages/Azure.AI.TextAnalytics/) NuGet package
-* Emotion detection: Emotion underlying text is provided by Text Analytics via the [Azure.AI.TextAnalytics](https://www.nuget.org/packages/Azure.AI.TextAnalytics/) NuGet package
+* Sentiment detection: Sentiment underlying text is provided by Text Analytics via the [Azure.AI.TextAnalytics](https://www.nuget.org/packages/Azure.AI.TextAnalytics/) NuGet package
 * Key phrases: Parsing text for key phrases is provided by Text Analytics via the [Azure.AI.TextAnalytics](https://www.nuget.org/packages/Azure.AI.TextAnalytics/) NuGet package
 * Speech-to-text: In the context of the scenario of this sample, where customers are telephoning a call center, the "speech to text" functionality could be handled via any number of methods. For the sake of convenience and simplicity, we are using the built-in voice input features of Windows 10 as a placeholder for those methods.
 
