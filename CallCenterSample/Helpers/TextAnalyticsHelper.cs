@@ -96,24 +96,11 @@ namespace CallCenterSample.Helpers
 
         private static void InitializeTextAnalyticsClient()
         {
-            if (!string.IsNullOrEmpty(ApiKey) && !string.IsNullOrEmpty(EndPoint) && !EndPoint.Contains("west") &&!EndPoint.Contains("asia"))
+            if (!string.IsNullOrEmpty(ApiKey) && !string.IsNullOrEmpty(EndPoint))
             {
-                AnalyticsClient = new Azure.AI.TextAnalytics.TextAnalyticsClient(
+                AnalyticsClient = new TextAnalyticsClient(
                     new Uri(EndPoint),
                     new AzureKeyCredential(ApiKey));
-            }
-        }
-
-        /// <summary>
-        /// Container for subscription credentials
-        /// </summary>
-        class ApiKeyServiceClientCredentials : ServiceClientCredentials
-        {
-            public override Task ProcessHttpRequestAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-            {
-                request.Headers.Add("Ocp-Apim-Subscription-Key", ApiKey);
-                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                return base.ProcessHttpRequestAsync(request, cancellationToken);
             }
         }
 
