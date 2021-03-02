@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Azure.AI.TextAnalytics;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -70,7 +71,7 @@ namespace CallCenterSample
         {
             try
             {
-                KeyPhrasesResult keyPhrasesResult = await TextAnalyticsHelper.GetKeyPhrasesAsync(this.CallerTextBox.Text);
+                ExtractKeyPhrasesResult keyPhrasesResult = await TextAnalyticsHelper.GetKeyPhrasesAsync(this.CallerTextBox.Text);
                 this.KeyPhrases.AddRange(keyPhrasesResult.KeyPhrases.OrderBy(i => i));
             }
             catch (Exception ex)

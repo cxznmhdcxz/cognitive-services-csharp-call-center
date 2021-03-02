@@ -106,8 +106,6 @@ namespace CallCenterSample.Helpers
 
         public static async Task<DetectLanguageResult> GetDetectedLanguageAsync(string input)
         {
-            DetectLanguageResult languageResult = new DetectLanguageResult() { Language = new Dictionary<string, string>() };
-
             if (!string.IsNullOrEmpty(input))
             {
                 DetectLanguageResultCollection result = await AnalyticsClient.DetectLanguageBatchAsync(
@@ -115,25 +113,15 @@ namespace CallCenterSample.Helpers
 
                 if (!result[0].HasError)
                 {
-                    languageResult.Language.Add("iso6391Name", result[0].PrimaryLanguage.Iso6391Name);
-                    languageResult.Language.Add("name", result[0].PrimaryLanguage.Name);
-                    languageResult.Language.Add("score", result[0].PrimaryLanguage.ConfidenceScore.ToString());
+                    return result[0];
                 }   
             }
 
-            return languageResult;
+            return null;
         }
 
-        public static async Task<SentimentResult> GetTextSentimentAsync(string input, string language = "en")
+        public static async Task<DocumentSentiment> GetTextSentimentAsync(string input, string language = "en")
         {
-            SentimentResult sentimentResult = new SentimentResult()
-            {
-                Sentiment = "null",
-                Negative = 0.5,
-                Neutral = 0.5,
-                Positive = 0.5
-            };
-
             if (!string.IsNullOrEmpty(input))
             {
                 AnalyzeSentimentResultCollection result = await AnalyticsClient.AnalyzeSentimentBatchAsync(
@@ -141,20 +129,15 @@ namespace CallCenterSample.Helpers
 
                 if (!result[0].HasError)
                 {
-                    sentimentResult.Sentiment = result[0].DocumentSentiment.Sentiment.ToString();
-                    sentimentResult.Negative = (double)result[0].DocumentSentiment.ConfidenceScores.Negative;
-                    sentimentResult.Neutral = (double)result[0].DocumentSentiment.ConfidenceScores.Neutral;
-                    sentimentResult.Positive = (double)result[0].DocumentSentiment.ConfidenceScores.Positive;
+                    return result[0].DocumentSentiment;
                 }
             }
 
-            return sentimentResult;
+            return null;
         }
 
-        public static async Task<KeyPhrasesResult> GetKeyPhrasesAsync(string input, string language = "en")
+        public static async Task<ExtractKeyPhrasesResult> GetKeyPhrasesAsync(string input, string language = "en")
         {
-            KeyPhrasesResult keyPhrasesResult = new KeyPhrasesResult() { KeyPhrases = Enumerable.Empty<string>() };
-
             if (!string.IsNullOrEmpty(input))
             {
                 ExtractKeyPhrasesResultCollection result = await AnalyticsClient.ExtractKeyPhrasesBatchAsync(
@@ -162,36 +145,11 @@ namespace CallCenterSample.Helpers
 
                 if (!result[0].HasError)
                 {
-                    List<string> phrases = new List<string>();
-                    foreach (string keyPhrase in result[0].KeyPhrases)
-                    {
-                        phrases.Add(keyPhrase);
-                    }
-
-                    keyPhrasesResult.KeyPhrases = phrases;
+                    return result[0];
                 }
             }
 
-            return keyPhrasesResult;
+            return null;
         }
     }
-
-    public class SentimentResult
-    {
-        public string Sentiment { get; set; }
-        public double Negative { get; set; }
-        public double Neutral { get; set; }
-        public double Positive { get; set; }
-    }
-
-    public class DetectLanguageResult
-    {
-        public Dictionary<string, string> Language { get; set; }
-    }
-
-    public class KeyPhrasesResult
-    {
-        public IEnumerable<string> KeyPhrases { get; set; }
-    }
-
 }

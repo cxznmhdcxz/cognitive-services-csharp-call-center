@@ -1,4 +1,5 @@
-﻿using CallCenterSample.Helpers;
+﻿using Azure.AI.TextAnalytics;
+using CallCenterSample.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -245,7 +246,7 @@ namespace CallCenterSample.Controls
                 if (!string.IsNullOrEmpty(this.speechRecognitionTextBox.Text))
                 {
                     DetectLanguageResult textDetectResult = await TextAnalyticsHelper.GetDetectedLanguageAsync(this.speechRecognitionTextBox.Text);
-                    this.detectedLanguage = new string[] { textDetectResult.Language["iso6391Name"], textDetectResult.Language["name"] };
+                    this.detectedLanguage = new string[] { textDetectResult.PrimaryLanguage.Iso6391Name, textDetectResult.PrimaryLanguage.Name };
                 }
                 else
                 {
@@ -284,10 +285,19 @@ namespace CallCenterSample.Controls
             {
                 if (!string.IsNullOrEmpty(this.speechRecognitionTextBox.Text))
                 {
-                    SentimentResult textAnalysisResult = await TextAnalyticsHelper.GetTextSentimentAsync(this.translatedText, this.detectedLanguage[0]);
-                    this.negativeSentimentControl.Sentiment = textAnalysisResult.Negative;
-                    this.neutralSentimentControl.Sentiment = textAnalysisResult.Neutral;
-                    this.positiveSentimentControl.Sentiment = textAnalysisResult.Positive;
+                    DocumentSentiment textAnalysisResult = await TextAnalyticsHelper.GetTextSentimentAsync(this.translatedText, this.detectedLanguage[0]);
+                    if (textAnalysisResult != null)
+                    {
+                        this.negativeSentimentControl.Sentiment = textAnalysisResult.ConfidenceScores.Negative;
+                        this.neutralSentimentControl.Sentiment = textAnalysisResult.ConfidenceScores.Neutral;
+                        this.positiveSentimentControl.Sentiment = textAnalysisResult.ConfidenceScores.Positive;
+                    }
+                    else
+                    {
+                        this.negativeSentimentControl.Sentiment = 0.5;
+                        this.neutralSentimentControl.Sentiment = 0.5;
+                        this.positiveSentimentControl.Sentiment = 0.5;
+                    }
                 }
                 else
                 {
